@@ -53,3 +53,26 @@ non-deterministic. This means that any thread can be awoken with the .release st
 I had previously assumed that order was the main factor. I will update this code accordingly.
 
 This feels like a lot of debugging ahead, for now I'll commit these changes to fix them in the next session. 
+
+
+# Nov 6 2:59 PM
+
+Since the previous num_Customers was a singular semaphore, I had to add its index value across the code to resolve any future issues with it. 
+
+Right now, I will try to ensure the correct code is able to compile and perform very basic interactions.
+
+Compilation has been successful, there was only a simple formatting error. The output changes across runs, so it looks good. 
+
+Next, I will proceed with the communication process and go till we are able to complete a transaction. 
+I made a few remodeling changes like adding acquire and release for append statements for future safety. 
+
+I removed the if ready statement, since it feels unecessary with numTellers keeping track of how many tellers are free by default. 
+
+Previously, I was able to initiate communication between the Teller and Customer. Now, I have to figure out how the comunication will actually occur. 
+I am considering making 2 semaphore arrays each hosting 3 threads, so that each customer is able to ask question and teller is able to respond back with a answer. 
+Making them a semaphore is important, because they're value can be diluted with multiple threads acting together and it helps maintain a communication order. 
+
+I am having a hardtime seeing where I need to put the acuquire and release statements. I added the random action selection component, but communication feels really hard.
+
+I think i'll stop for now. I'll commit my changes and test them at a later time/day. 
+
