@@ -36,3 +36,20 @@ I added a waiting array as well in case all the tellers are full, and wrote the 
 
 I just noticed an error in my serving code, I am pointing to a nonexisistent index. So for initlizication, I will change it to 3 empty index values to prevent this in the future. 
 
+# Nov 6 2:25 PM
+
+I just realized that there is no point in the waiting array, as .acquire already fufills that purpose. I will need to change the if/else statements.
+I remodefied them, and removed the extra .acquire statement in the end since we dont want to two tellers per customer. 
+
+I need to make ready a mutex, since multiple threads could take a open teller at once. 
+
+I decided to make readyTeller and readyCrit separate due to their important roles.
+
+I redid the order of the Teller and Customer acquire+release statements to reflect the changed logic.
+
+I may need to have 3 threads semaphors for customers to keep up with the tellers, as I just found out that threads can be 
+non-deterministic. This means that any thread can be awoken with the .release statement. 
+
+I had previously assumed that order was the main factor. I will update this code accordingly.
+
+This feels like a lot of debugging ahead, for now I'll commit these changes to fix them in the next session. 
