@@ -28,3 +28,11 @@ the external code is primarily to build the threads not control their interactio
 
 I will commit this for the time being. 
 
+# Nov 6 2:03 PM
+
+I am currently trying to figure how to assign tellers to customers, and print out the statements in conjunction. Currently, I'm planning on having a shared array of avalible tellers, and a another pool of array to show which customer is being served. Customer ID is the index, and Teller ID is the person to be served. 
+
+I added a waiting array as well in case all the tellers are full, and wrote the precursor statemetns for selection and introduction. I have yet to test the code. I may have to change the purpose of the serving array in the future right now, it shows which customerID is being served from the threadID. I having a hard time visualizing when the customer and thread_id would loop back and forth. 
+
+I just noticed an error in my serving code, I am pointing to a nonexisistent index. So for initlizication, I will change it to 3 empty index values to prevent this in the future. 
+
