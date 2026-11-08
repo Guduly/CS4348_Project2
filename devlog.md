@@ -74,5 +74,21 @@ Making them a semaphore is important, because they're value can be diluted with 
 
 I am having a hardtime seeing where I need to put the acuquire and release statements. I added the random action selection component, but communication feels really hard.
 
-I think i'll stop for now. I'll commit my changes and test them at a later time/day. 
+I think i'll stop for now. I'll commit my changes and test them at a later time/day.
 
+# Nov 8 4:42 PM 
+
+I forgot my current progress, but for now I am run my program with 5 -> 10 -> 20 customers just to see if I need to debug anything at this point.
+
+All the tellers seem to be selected across the various test, and the program stalls at the withdraw and deposit stage, since there is nothing there for that component. 
+Regardless, current program is debug free for operations. 
+
+
+Before performing the actual transaction by going to safe or manager, I will handle the timing components for both customer and timer. In addition, I should consider adding entrance component requirements for customers and how many tellers can go the safe on duty. 
+
+I am placing customer wait after "Going to the Bank" text to illustrate travel and follows the project directions. I must now build the door code to allow at max 2 customers to enter at once, this will obviously be a semaphore. 
+
+I wrote some code for that in addition to the manager wait time. I am currently working on the safe entrance component, which should also be a semaphore to prevent race conditions. 
+In addition, I am also writing the output text for them as well. 
+
+This code feels very subject to change, since I did not run it yet. Regardless, I will commit these changes and attempt to debug any issues in the next entry. 

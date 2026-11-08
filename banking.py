@@ -1,5 +1,5 @@
 import threading
-import random 
+import random, time  
 
 num_tellers = threading.Semaphore(0) 
 num_customers = [threading.Semaphore(0) for _ in range(3)] 
@@ -12,6 +12,12 @@ response = [None] * 3
 readyCrit = threading.Semaphore(1)
 readyTellers = []
 serving = [None] * 3
+
+# Customer Door 
+door = threading.Semaphore(2)
+
+# safe entrance 
+safe = threading.Semaphore(2)
 
 def Teller(thread_id):
     print(f"Teller {thread_id} []: ready to serve")
@@ -29,12 +35,36 @@ def Teller(thread_id):
 
     teller_Ask[thread_id].release()
     customer_Res[thread_id].acquire();
+    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Handling {response[thread_id]} transaction")
+
+    if(response[thread_id] == "Withdrawal"):
+        # manager wait time 
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Going to Manager")
+        time.sleep(random.uniform(5, 30) / 1000)
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Recevied Manger Permission")
+    
+    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Going to Safe")
+    
+    safe.acquire()
+    time.sleep(random.uniform(10, 50) / 1000) 
+    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Leaving Safe")
+    safe.release()
+
+    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Finishing {response[thread_id]} transaction")
+    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Wait for customer to leave")
+
+
 
 
 def Customer(thread_id, action):
     print(f"Customer {thread_id} []: Wants to perform {action} transaction")
     print(f"Customer {thread_id} []: Going to Bank")
+    time.sleep(random.uniform(0, 100) / 1000)
+
+    door.acquire()
     print(f"Customer {thread_id} []: Entering the Bank")
+    door.release() 
+
     print(f"Customer {thread_id} []: Getting to Line")
     print(f"Customer {thread_id} []: Selecting a Teller")
 
@@ -65,7 +95,7 @@ for i in range(3):
 
 options = ["Deposit", "Withdrawal"]
 
-for i in range(3): 
+for i in range(20): 
     threads.append(threading.Thread(target=Customer, args = (i,random.choice(options))))
 
 for i in threads: 
