@@ -16,6 +16,9 @@ serving = [None] * 3
 # Customer Door 
 door = threading.Semaphore(2)
 
+# Manager permission 
+manager = threading.Semaphore(1)
+
 # safe entrance 
 safe = threading.Semaphore(2)
 
@@ -38,14 +41,18 @@ def Teller(thread_id):
     print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Handling {response[thread_id]} transaction")
 
     if(response[thread_id] == "Withdrawal"):
-        # manager wait time 
+        # manager wait time
         print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Going to Manager")
+        manager.acquire()
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Talking with Manager")
         time.sleep(random.uniform(5, 30) / 1000)
-        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Recevied Manger Permission")
+        manager.release()
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Received Manger Permission")
     
     print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Going to Safe")
     
     safe.acquire()
+    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Entering Safe")
     time.sleep(random.uniform(10, 50) / 1000) 
     print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Leaving Safe")
     safe.release()
@@ -59,8 +66,10 @@ def Teller(thread_id):
 def Customer(thread_id, action):
     print(f"Customer {thread_id} []: Wants to perform {action} transaction")
     print(f"Customer {thread_id} []: Going to Bank")
-    time.sleep(random.uniform(0, 100) / 1000)
 
+    time.sleep(random.uniform(0, 100) / 1000)
+    print(f"Customer {thread_id} []: Arrived at Bank")
+    
     door.acquire()
     print(f"Customer {thread_id} []: Entering the Bank")
     door.release() 

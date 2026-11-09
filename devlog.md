@@ -92,3 +92,15 @@ I wrote some code for that in addition to the manager wait time. I am currently 
 In addition, I am also writing the output text for them as well. 
 
 This code feels very subject to change, since I did not run it yet. Regardless, I will commit these changes and attempt to debug any issues in the next entry. 
+
+# Nov 8 6:02 PM 
+
+While reviewing the sample output pdf given and testing the program, I realized that manager should also be a semaphore since there is only one of them. During a test run, 2 tellers were interacting with the manager at the same time. 
+
+To correct it, I am making manager a semaphore and adding the appropriate acquire + release statements. 
+
+I added the fixes, and no two tellers interacted with the managers at the same time. In addition, I added some print statements to show illustrate the waiting time for customer arrival, safe entering, and other periods for easier debugging. 
+
+For now, the code seems to be working well. I ran it multiple times and did not face any errors except for it stalling for input at the end, which may have occured due to another customer not being selected.
+
+I have festivities right now, so this will be a short entry. Next entry will document the process of a teller selecting a another customer once the job is over. 
