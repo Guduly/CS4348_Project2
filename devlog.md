@@ -164,3 +164,20 @@ Right now, all the tellers are closing before the customer are all serviced. So,
 I will commit my current changes. After adding this, the bank still is not able to be closed. I found that solution as well, but ill commit it in the next entry 
 since I feel like a lot has been done in this entry. 
 
+# Nov 13 2:50 PM 
+
+The bank is not closing now, due to a prior num_customers semaphore causing a deadblock by blocking with acquire. So simply adding a for loop to release all the tellers after close = true
+should set all the tellers free.
+
+The bank is able to close now! I will now double check with the sample output and rubric to ensure everything is correct before making the README.md
+
+There was a minor print statement error, the customer would automatically say "selecting a Teller" even when no teller was available. Simply moving this 
+print statement after num_teller.acquire() resolved this issue. I have not noticed any other determential errors in my code.
+
+I suppose another difference between my output and sample output is that my output is "Customer wants to go to bank for transaction" then next line automatically is "Customer goes to bank". 
+
+I made it that way to illustrate that as travel time, but the sample output is slightly different. This does not seem like a crucial error, so I think I am safely done with this project. 
+
+I wrote the README.md, I think I am done now. I will review if there a submission procedure and submit it. 
+
+I am done now. 

@@ -82,9 +82,6 @@ def Teller(thread_id):
     print(f"Teller {thread_id} []: Leaving for the day")
 
 
-
-
-
 def Customer(thread_id, action):
     print(f"Customer {thread_id} []: Wants to perform {action} transaction")
     print(f"Customer {thread_id} []: Going to Bank")
@@ -97,9 +94,9 @@ def Customer(thread_id, action):
     door.release() 
 
     print(f"Customer {thread_id} []: Getting to Line")
-    print(f"Customer {thread_id} []: Selecting a Teller")
 
     num_tellers.acquire()
+    print(f"Customer {thread_id} []: Selecting a Teller")
     
     readyCrit.acquire()
     tid = readyTellers.pop(0) 
@@ -126,7 +123,6 @@ def Customer(thread_id, action):
     print(f"Customer {thread_id} []: Leaves Bank")
     
 
-
 threads = []
 
 for i in range(3): 
@@ -138,10 +134,8 @@ for _ in range(3):
 
 options = ["Deposit", "Withdrawal"]
 
-for i in range(20): 
+for i in range(50): 
     threads.append(threading.Thread(target=Customer, args = (i,random.choice(options))))
-
-
 
 for i in threads[3:]: 
     i.start()
@@ -150,6 +144,9 @@ for i in threads[3:]:
     i.join()
 
 close = True
+
+for i in range(3): 
+    num_customers[i].release()
 
 for i in threads[:3]: 
     i.join()
