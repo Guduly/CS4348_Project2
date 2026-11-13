@@ -122,4 +122,24 @@ I made it so that if a the task were done, the customer will leave and pass thro
 
 Now, the challenge remains in picking the next customer. 
 
-I can't think of anything right now, so I'll commit my changes. But this solution and closing the bank should be the last few changes needded. 
+I can't think of anything right now, so I'll commit my changes. But this solution and closing the bank should be the last few changes needded.
+
+# Nov 13 1:56 PM 
+
+Goal today is to complete the project, as mentioned before the two remaining problems are switching to different customer after the teller is done and closing the bank. 
+
+For switching to a different customer, I had considered recurison as a option since the logic would just be repeated constantly. However, this felt like overkill for this, 
+since the run and compile time may drastically increase. 
+
+I am considering using a loop on the teller side to switch between customers. 
+
+As for closing the bank, a simple boolean and if statement seem enough. I will attempt to implement these thoughts unto code, and return for progress updates. 
+
+I added the loop, and while looking at the instructions the bank can only open if all 3 tellers are ready. 
+
+Assuming ready implies the print statement, I will need to add a semaphore so that the code waits until all tellers are ready. 
+
+I added the respective code, however the code seems unable to run. Ie I just see a blank space in the area of text. 
+
+I will commit these changes and debug that issue in the next entry, I think fixing this issue and testing would complete the project now. 
+

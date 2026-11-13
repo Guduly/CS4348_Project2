@@ -23,47 +23,63 @@ manager = threading.Semaphore(1)
 safe = threading.Semaphore(2)
 
 # Teller Task Completion
-teller_done = [threading.Semaphore(0) for _ in range(3)] 
+teller_done = [threading.Semaphore(0) for _ in range(3)]
+
+# bank status
+open = threading.Semaphore(0)
+close = False
 
 def Teller(thread_id):
-    print(f"Teller {thread_id} []: ready to serve")
-    readyCrit.acquire()
-    readyTellers.append(thread_id)
-    readyCrit.release()
 
-    num_tellers.release()
-    print(f"Teller {thread_id} []: waiting for a Customer")
-    num_customers[thread_id].acquire()
-    
-    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Serving a Customer")
-    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Asks for Transaction")
-    #num_customers[thread_id].release()
+    while True:
+        open.relese() 
 
-    teller_Ask[thread_id].release()
-    customer_Res[thread_id].acquire();
-    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Handling {response[thread_id]} transaction")
+        print(f"Teller {thread_id} []: ready to serve")
+        readyCrit.acquire()
+        readyTellers.append(thread_id)
+        readyCrit.release()
 
-    if(response[thread_id] == "Withdrawal"):
-        # manager wait time
-        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Going to Manager")
-        manager.acquire()
-        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Talking with Manager")
-        time.sleep(random.uniform(5, 30) / 1000)
-        manager.release()
-        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Received Manger Permission")
-    
-    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Going to Safe")
-    
-    safe.acquire()
-    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Entering Safe")
-    time.sleep(random.uniform(10, 50) / 1000) 
-    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Leaving Safe")
-    safe.release()
+        num_tellers.release()
+        print(f"Teller {thread_id} []: waiting for a Customer")
+        num_customers[thread_id].acquire()
 
-    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Finishing {response[thread_id]} transaction")
-    print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Wait for customer to leave")
+        if close: 
+            break
+        
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Serving a Customer")
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Asks for Transaction")
+        #num_customers[thread_id].release()
+
+        teller_Ask[thread_id].release()
+        customer_Res[thread_id].acquire();
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Handling {response[thread_id]} transaction")
+
+        if(response[thread_id] == "Withdrawal"):
+            # manager wait time
+            print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Going to Manager")
+            manager.acquire()
+            print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Talking with Manager")
+            time.sleep(random.uniform(5, 30) / 1000)
+            manager.release()
+            print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Received Manger Permission")
+        
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Going to Safe")
+        
+        safe.acquire()
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Entering Safe")
+        time.sleep(random.uniform(10, 50) / 1000) 
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Leaving Safe")
+        safe.release()
+
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Finishing {response[thread_id]} transaction")
+        print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Wait for customer to leave")
+        
+        teller_done[thread_id].release()
     
-    teller_done[thread_id].release()
+    
+    print(f"Teller {thread_id} []: Leaving for the day")
+
+
 
 
 
@@ -113,15 +129,25 @@ threads = []
 for i in range(3): 
     threads.append(threading.Thread(target=Teller, args = (i,)))
 
+for _ in range(3): 
+    open.acquire()
+
 options = ["Deposit", "Withdrawal"]
 
 for i in range(20): 
     threads.append(threading.Thread(target=Customer, args = (i,random.choice(options))))
 
+
+
 for i in threads: 
     i.start()
 
+
+closing = True
+
 for i in threads: 
     i.join()
+
+print("The bank closes for today")
 
 
