@@ -143,3 +143,24 @@ I added the respective code, however the code seems unable to run. Ie I just see
 
 I will commit these changes and debug that issue in the next entry, I think fixing this issue and testing would complete the project now. 
 
+# Nov 13 2:19 PM 
+
+I noted a type in the open semapore release at the teller function. Fixing this type did not resolve the issue, though 
+
+I found the issue now, essentially deadlock is occuring since the tellers threads have not started yet, while the open semaphore is waiting to release them. 
+The solution is simple, start the teller threads as soon as they are appended to resolve the deadlock error. 
+
+In addition, all the incoming thread start and release threads will need to be edited to accomodate this change.
+The code is able to run now, but the bank is not able to closed. 
+
+In addition, I noticed another error during testing. In some cases, the teller is already waiting for a customer before the customer has left. 
+A semaphore is the right fix for this, and luckly it feels like a simple acquire and release placement in the teller and customer function.
+
+I have now added the semaphore, and the bank was not closing earlier due to a typo in one of the variables. I will now commence testing again. 
+
+There seems to be a another error, as the teller are not able to respond. I am guessing this is a issue from the close = true flag. 
+Right now, all the tellers are closing before the customer are all serviced. So, I would seperate the bounds of when the customer can run and the teller. 
+
+I will commit my current changes. After adding this, the bank still is not able to be closed. I found that solution as well, but ill commit it in the next entry 
+since I feel like a lot has been done in this entry. 
+

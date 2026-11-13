@@ -24,6 +24,7 @@ safe = threading.Semaphore(2)
 
 # Teller Task Completion
 teller_done = [threading.Semaphore(0) for _ in range(3)]
+customer_done = [threading.Semaphore(0) for _ in range(3)]
 
 # bank status
 open = threading.Semaphore(0)
@@ -32,7 +33,7 @@ close = False
 def Teller(thread_id):
 
     while True:
-        open.relese() 
+        open.release() 
 
         print(f"Teller {thread_id} []: ready to serve")
         readyCrit.acquire()
@@ -75,6 +76,7 @@ def Teller(thread_id):
         print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Wait for customer to leave")
         
         teller_done[thread_id].release()
+        customer_done[thread_id].acquire()
     
     
     print(f"Teller {thread_id} []: Leaving for the day")
@@ -115,6 +117,7 @@ def Customer(thread_id, action):
 
     teller_done[tid].acquire()
     print(f"Customer {thread_id} [Teller {tid}]: Leaves Teller")
+    customer_done[tid].release()
 
     door.acquire()
     print(f"Customer {thread_id} []: Goes to Door")
@@ -128,6 +131,7 @@ threads = []
 
 for i in range(3): 
     threads.append(threading.Thread(target=Teller, args = (i,)))
+    threads[i].start()
 
 for _ in range(3): 
     open.acquire()
@@ -139,13 +143,15 @@ for i in range(20):
 
 
 
-for i in threads: 
+for i in threads[3:]: 
     i.start()
 
+for i in threads[3:]: 
+    i.join()
 
-closing = True
+close = True
 
-for i in threads: 
+for i in threads[:3]: 
     i.join()
 
 print("The bank closes for today")
