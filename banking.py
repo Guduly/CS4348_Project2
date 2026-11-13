@@ -22,6 +22,9 @@ manager = threading.Semaphore(1)
 # safe entrance 
 safe = threading.Semaphore(2)
 
+# Teller Task Completion
+teller_done = [threading.Semaphore(0) for _ in range(3)] 
+
 def Teller(thread_id):
     print(f"Teller {thread_id} []: ready to serve")
     readyCrit.acquire()
@@ -59,7 +62,8 @@ def Teller(thread_id):
 
     print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Finishing {response[thread_id]} transaction")
     print(f"Teller {thread_id} [Customer {serving[thread_id]}]: Wait for customer to leave")
-
+    
+    teller_done[thread_id].release()
 
 
 
@@ -92,10 +96,17 @@ def Customer(thread_id, action):
     response[tid] = action
     print(f"Customer {thread_id} [Teller {tid}]: Asks for a {action} transaction")
     customer_Res[tid].release()
+
+    teller_done[tid].acquire()
+    print(f"Customer {thread_id} [Teller {tid}]: Leaves Teller")
+
+    door.acquire()
+    print(f"Customer {thread_id} []: Goes to Door")
+    door.release() 
+    
+    print(f"Customer {thread_id} []: Leaves Bank")
     
 
-
-    
 
 threads = []
 

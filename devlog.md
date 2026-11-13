@@ -103,4 +103,23 @@ I added the fixes, and no two tellers interacted with the managers at the same t
 
 For now, the code seems to be working well. I ran it multiple times and did not face any errors except for it stalling for input at the end, which may have occured due to another customer not being selected.
 
-I have festivities right now, so this will be a short entry. Next entry will document the process of a teller selecting a another customer once the job is over. 
+I have festivities right now, so this will be a short entry. Next entry will document the process of a teller selecting a another customer once the job is over.
+
+# Nov 12 10:17 PM 
+
+During lecture, I asked the professor if the exit door is the same as the entrance door. He confirmed it was, I will add this implementation as well. 
+Currently, the main tasks left are ensuring the teller can switch properly between customers and also add the above implementation. 
+
+Right now, I am having a hard time seeing how i can switch between customers for the tellers. would a simple array work, or just moving unto the next customer. 
+
+But then, one or more threads may grab the same customer if the one or more tellers are done at the same time. 
+
+In which case, a semaphore would the be the best option. I will run my code a few times, just to see if I can spot any other issues before devlving into debugging or development 
+
+All the program compiles, so I was not able to notice any issues, but for now I will add the semaphore to complete a task.
+
+I made it so that if a the task were done, the customer will leave and pass through the entrance and exit doors. 
+
+Now, the challenge remains in picking the next customer. 
+
+I can't think of anything right now, so I'll commit my changes. But this solution and closing the bank should be the last few changes needded. 
